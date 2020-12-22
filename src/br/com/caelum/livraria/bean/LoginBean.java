@@ -18,8 +18,6 @@ public class LoginBean {
 
 	private Usuario usuario = new Usuario();
 
-	private boolean autenticado;
-
 	public Usuario getUsuario() {
 		return usuario;
 	}
