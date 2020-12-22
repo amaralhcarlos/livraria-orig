@@ -11,6 +11,9 @@
 
 	<div id="header">
 		<h:graphicImage library="img" name="logo.png" />
+		<h:form rendered="#{view.viewId != '/login.xhtml'}">
+			<h:commandLink value="Logout" action="#{loginBean.deslogar}"/>
+		</h:form>
 		<h1>
 			<ui:insert name="titulo" />
 		</h1>
