@@ -1,0 +1,9 @@
+@charset "ISO-8859-1";
+
+.myTable td:nth-child(1) {
+    width: 20%;
+}
+
+.myTable td:nth-child(2) {
+    width: 20%;
+}

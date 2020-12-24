@@ -18,7 +18,7 @@ public class LogPhaseListener implements PhaseListener {
 
 	@Override
 	public void beforePhase(PhaseEvent event) {
-		System.out.println("FASE: " + event.getPhaseId());	
+		//System.out.println("FASE: " + event.getPhaseId());	
 	}
 
 	@Override

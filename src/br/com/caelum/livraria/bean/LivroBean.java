@@ -23,12 +23,23 @@ public class LivroBean {
 	private Integer livroId;
 	private Integer autorId;
 
+	private List<Livro> livros;
+	private DAO<Livro> daoLivro;
+	private DAO<Autor> daoAutor;
+
+	public LivroBean() {
+
+	}
+
 	public Livro getLivro() {
 		return livro;
 	}
 
 	public List<Autor> getAutores() {
-		return new DAO<Autor>(Autor.class).listaTodos();
+
+		createDAOs();
+
+		return this.daoAutor.listaTodos();
 	}
 
 	public List<Autor> getAutoresDoLivro() {
@@ -36,7 +47,16 @@ public class LivroBean {
 	}
 
 	public List<Livro> getTodosOsLivros() {
-		return new DAO<Livro>(Livro.class).listaTodos();
+
+		createDAOs();
+
+		if (Objects.isNull(this.livros)) {
+
+			this.livros = this.daoLivro.listaTodos();
+
+		}
+
+		return this.livros;
 	}
 
 	public Integer getAutorId() {
@@ -55,9 +75,11 @@ public class LivroBean {
 		this.livroId = livroId;
 	}
 
-	public void gravarAutor() {
+	public void associarAutor() {
 
-		Autor autor = new DAO<Autor>(Autor.class).buscaPorId(this.autorId);
+		createDAOs();
+
+		Autor autor = this.daoAutor.buscaPorId(this.autorId);
 
 		List<Autor> autores = this.getAutoresDoLivro();
 
@@ -82,6 +104,8 @@ public class LivroBean {
 
 	public RedirectView gravar() {
 
+		createDAOs();
+
 		System.out.println("Gravando livro " + this.livro.getTitulo());
 
 		if (livro.getAutores().isEmpty()) {
@@ -92,20 +116,26 @@ public class LivroBean {
 		}
 
 		if (Objects.isNull(this.livro.getId())) {
-			new DAO<Livro>(Livro.class).adiciona(this.livro);
+			this.daoLivro.adiciona(this.livro);
 		} else {
-			new DAO<Livro>(Livro.class).atualiza(this.livro);
+			this.daoLivro.atualiza(this.livro);
 
 		}
+
+		this.livros = this.daoLivro.listaTodos();
 
 		return new RedirectView("livro");
 	}
 
 	public void remover(Livro livro) {
+
+		createDAOs();
+
 		System.out.println("Removendo livro " + this.livro.getTitulo());
 
-		new DAO<Livro>(Livro.class).remove(livro);
+		this.daoLivro.remove(livro);
 
+		this.livros = this.daoLivro.listaTodos();
 	}
 
 	public void carregar(Livro livro) {
@@ -115,7 +145,11 @@ public class LivroBean {
 	}
 
 	public void carregarViaId() {
-		this.livro = new DAO<Livro>(Livro.class).buscaPorId(this.livroId);
+
+		createDAOs();
+
+		this.livro = this.daoLivro.buscaPorId(this.livroId);
+
 	}
 
 	public String formAutor() {
@@ -135,6 +169,22 @@ public class LivroBean {
 
 			System.out.println("Erro isbn");
 			throw new ValidatorException(new FacesMessage("ISBN não começa com o dígito 1"));
+		}
+
+	}
+
+	public void createDAOs() {
+
+		if (Objects.isNull(this.daoLivro)) {
+
+			this.daoLivro = new DAO<Livro>(Livro.class);
+
+		}
+
+		if (Objects.isNull(this.daoAutor)) {
+
+			this.daoAutor = new DAO<Autor>(Autor.class);
+
 		}
 
 	}

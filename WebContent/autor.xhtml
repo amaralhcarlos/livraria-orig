@@ -15,13 +15,15 @@
 	</f:metadata>
 
 	<ui:define name="titulo">
-		Novo Autor
+		<p:outputPanel>Novo Autor</p:outputPanel>
 	</ui:define>
 
 	<ui:define name="content">
-		<h:form>
-			<p:fieldset>
-				<legend>Dados do Autor</legend>
+
+		<p:messages />
+
+		<h:form id="autor">
+			<p:fieldset legend="Dados do Autor">
 				<h:panelGrid columns="3">
 
 					<p:outputLabel value="Nome:" for="nome" />
@@ -34,50 +36,44 @@
 
 					<p:outputLabel value="Email:" for="email" />
 					<p:inputText id="email" value="#{autorBean.autor.email}"
-						required="true">
-						<f:passThroughAttribute name="type" value="email" />
+						required="true" validatorMessage="E-mail inválido">
+						<f:attribute name="type" value="email" />
+						<f:passThroughAttribute name="placeholder" value="E-mail do Autor" />
+						<f:validateRegex
+							pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" />
 					</p:inputText>
 					<p:message for="email" />
 
 					<p:commandButton value="Gravar" action="#{autorBean.gravar}"
-						update="@form" process="@form" />
-					<!-- <f:ajax execute="@form"
-							render="@form :formTabelaAutores:tabelaAutores" />-->
-
+						update="@form" process="@form :formTabelaAutores:tabelaAutores" />
 				</h:panelGrid>
 			</p:fieldset>
 		</h:form>
 
+		<br />
 
 		<h:form id="formTabelaAutores">
-			<fieldset>
-				<legend>Autores Cadastrados</legend>
+			<p:fieldset legend="Autores Cadastrados">
 
-				<h:dataTable value="#{autorBean.todosOsAutores}" var="autor"
-					id="tabelaAutores">
+				<p:dataList value="#{autorBean.todosOsAutores}" var="autor"
+					id="tabelaAutores" type="definition">
 
-					<h:column>
-						<f:facet name="header">Autor</f:facet>
-						<h:outputText value="#{autor.nome}" />
-					</h:column>
+					<f:facet name="header">Autor</f:facet>
 
-					<h:column>
-						<h:commandLink value="Alterar Autor"
-							action="#{autorBean.carregar(autor)}" />
-					</h:column>
+					<p:commandButton icon="fa fa-fw fa-edit" update=":autor">
+						<f:setPropertyActionListener value="#{autor}"
+							target="#{autorBean.autor}" />
+					</p:commandButton>
 
-					<h:column>
-						<h:commandLink value="Excluir Autor"
-							action="#{autorBean.remover(autor)}" />
-					</h:column>
-
-				</h:dataTable>
-
-			</fieldset>
+					<p:commandButton icon="fa fa-fw fa-remove"
+						action="#{autorBean.remover(autor)}" update="@form" />
+						
+					#{autor.nome} - #{autor.email}
+				
+				</p:dataList>
+			</p:fieldset>
 		</h:form>
 	</ui:define>
-
-
 
 	<ui:define name="footerNamePage">
 	Cadastro de Autores

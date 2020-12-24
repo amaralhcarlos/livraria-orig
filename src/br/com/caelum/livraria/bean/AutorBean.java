@@ -1,13 +1,20 @@
 package br.com.caelum.livraria.bean;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Objects;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.persistence.PersistenceException;
+
+import org.hibernate.exception.ConstraintViolationException;
 
 import br.com.caelum.livraria.dao.DAO;
 import br.com.caelum.livraria.modelo.Autor;
+import br.com.caelum.livraria.util.RedirectView;
 
 @ManagedBean
 @ViewScoped
@@ -18,6 +25,10 @@ public class AutorBean {
 
 	public Autor getAutor() {
 		return autor;
+	}
+
+	public void setAutor(Autor autor) {
+		this.autor = autor;
 	}
 
 	public Integer getAutorId() {
@@ -33,7 +44,7 @@ public class AutorBean {
 		return new DAO<Autor>(Autor.class).listaTodos();
 	}
 
-	public String gravar() {
+	public RedirectView gravar() {
 		System.out.println("Gravando autor " + this.autor.getNome());
 
 		if (Objects.isNull(autor.getId())) {
@@ -44,7 +55,7 @@ public class AutorBean {
 
 		this.autor = new Autor();
 
-		return "livro?faces-redirect=true";
+		return new RedirectView("livro");
 	}
 
 	public void carregar(Autor autor) {
@@ -58,7 +69,12 @@ public class AutorBean {
 	public void remover(Autor autor) {
 		System.out.println("Removendo o autor " + autor.getNome());
 
-		new DAO<Autor>(Autor.class).remove(autor);
+		try {
+			new DAO<Autor>(Autor.class).remove(autor);
+		} catch (PersistenceException ex) {
+			FacesContext.getCurrentInstance().addMessage("autor",
+					new FacesMessage(null, "Autor possui livros associados."));
+		}
 
 	}
 }
