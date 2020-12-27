@@ -13,10 +13,40 @@
 <h:body>
 
 	<div id="header">
-		<h:graphicImage library="img" name="logo.png" />
+		<p:panelGrid columns="2" styleClass="ui-noborder">
+
+			<h:graphicImage library="img" name="logo.png" />
+
+			<p:themeSwitcher id="basic"
+				style="width:165px; position:absolute; right:10px;"
+				rendered="#{view.viewId != '/login.xhtml'}">
+				<f:selectItems value="#{temaBean.temas}" var="tema"
+					itemLabel="#{tema}" itemValue="#{tema}" />
+			</p:themeSwitcher>
+
+		</p:panelGrid>
+
+		<br />
+		
+		<p:growl id="messages" showDetail="true" sticky="true">
+			<p:autoUpdate />
+		</p:growl>
+
 		<h:form rendered="#{view.viewId != '/login.xhtml'}">
-			<h:commandLink value="Logout" action="#{loginBean.deslogar}" />
+
+			<p:menuButton value="Menu" icon="fa fa-fw fa-edit">
+				<p:menuitem value="Cadastro de Autores"
+					action="autor?faces-redirect=true" icon="fa fa-fw fa-user" />
+				<p:menuitem value="Cadastro de Livros"
+					action="livro?faces-redirect=true" icon="fa fa-fw fa-book" />
+				<p:menuitem value="Vendas"
+					action="vendas?faces-redirect=true" icon="fa fa-fw fa-money" />
+				<p:separator />
+				<p:menuitem value="Logout" action="#{loginBean.deslogar}"
+					icon="fa fa-fw fa-sign-out" />
+			</p:menuButton>
 		</h:form>
+
 		<h1>
 			<ui:insert name="titulo" />
 		</h1>

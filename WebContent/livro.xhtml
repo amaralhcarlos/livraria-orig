@@ -21,7 +21,9 @@
 
 	<ui:define name="content">
 		<h:form id="livro">
-			<p:messages id="messages" />
+			<p:messages id="messages">
+				<p:autoUpdate />
+			</p:messages>
 			<p:fieldset legend="Dados do livro">
 				<p:panelGrid columns="2">
 
@@ -140,7 +142,8 @@
 					</p:column>
 
 					<p:column sortBy="#{livro.titulo}" filterBy="#{livro.titulo}"
-						headerText="Título do livro" footerText="contains" filterMatchMode="contains">
+						headerText="Título do livro" footerText="contains"
+						filterMatchMode="contains">
 						<h:outputText value="#{livro.titulo}" />
 					</p:column>
 
@@ -155,7 +158,8 @@
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="Data de Lançamento" sortBy="#{livro.dataLancamento.time}">
+					<p:column headerText="Data de Lançamento"
+						sortBy="#{livro.dataLancamento.time}">
 						<h:outputText value="#{livro.dataLancamento.time}">
 							<f:convertDateTime pattern="dd/MM/yyyy"
 								timezone="America/Sao_Paulo" />
